@@ -1222,75 +1222,90 @@
     .btn-plan:hover { border-color: var(--dark); }
 
     /* ═══════════════════════════════
-       CTA FINAL
+       CTA FINAL — editorial
     ═══════════════════════════════ */
     .cta {
-      padding: 0;
-      background: var(--white);
+      padding: 96px 0 112px;
+      background: var(--light);
+      background-image: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0,253,201,.09) 0%, transparent 70%);
     }
 
-    .cta-block {
-      background: var(--dark);
-      border-radius: var(--r-lg);
-      padding: 80px 72px;
-      position: relative;
-      overflow: hidden;
-      margin-bottom: 80px;
+    .cta-editorial {
+      text-align: center;
+      max-width: 760px;
+      margin-inline: auto;
     }
 
-    .cta-block::before {
-      content: '';
-      position: absolute;
-      top: -120px; right: -80px;
-      width: 560px; height: 560px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,253,201,.14) 0%, transparent 60%);
-      pointer-events: none;
+    .cta-ed-eyebrow {
+      display: inline-block;
+      margin-bottom: 28px;
     }
 
-    .cta-block::after {
-      content: '';
-      position: absolute;
-      bottom: -80px; left: 10%;
-      width: 360px; height: 360px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(73,175,255,.09) 0%, transparent 60%);
-      pointer-events: none;
-    }
-
-    .cta-inner {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 48px;
-    }
-
-    .cta-title {
+    .cta-ed-title {
       font-family: var(--font-h);
-      font-size: clamp(2rem, 3.5vw, 3rem);
       font-weight: 900;
+      font-size: clamp(3rem, 6vw, 5.5rem);
       letter-spacing: -.04em;
-      color: var(--white);
-      line-height: 1.1;
-      margin-bottom: 12px;
+      line-height: 1.05;
+      color: var(--dark);
+      margin-bottom: 28px;
     }
 
-    .cta-title span { color: var(--primary); }
-
-    .cta-sub {
-      font-size: 1rem;
-      color: rgba(255,255,255,.5);
-      line-height: 1.65;
+    .cta-ed-hl {
+      position: relative;
+      display: inline-block;
+      -webkit-text-stroke: 2.5px var(--dark);
+      color: transparent;
     }
 
-    .cta-btns {
+    .cta-ed-hl::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      bottom: 4px;
+      height: 14px;
+      background: var(--primary);
+      z-index: -1;
+      border-radius: 4px;
+      transform-origin: left;
+      animation: hl-reveal 0.9s cubic-bezier(.22,1,.36,1) 0.4s both;
+    }
+
+    @keyframes hl-reveal {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    .cta-ed-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 480px;
+      margin-inline: auto;
+      margin-bottom: 48px;
+    }
+
+    .cta-ed-actions {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-      align-items: flex-end;
-      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .cta-ed-link {
+      font-family: var(--font-h);
+      font-size: .95rem;
+      font-weight: 600;
+      color: var(--dark);
+      border-bottom: 1.5px solid var(--mid);
+      padding-bottom: 2px;
+      transition: border-color var(--ease), color var(--ease);
+    }
+
+    .cta-ed-link:hover {
+      color: var(--primary-dk);
+      border-color: var(--primary-dk);
     }
 
     /* ═══════════════════════════════
@@ -1407,9 +1422,8 @@
       .how-step:not(:last-child) { border-right: none; border-bottom: 1px solid var(--mid); }
       .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin-inline: auto; }
       .fc-span-7, .fc-span-5, .fc-span-8, .fc-span-4, .fc-span-6 { grid-column: span 12; }
-      .cta-inner { grid-template-columns: 1fr; }
-      .cta-btns { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
-      .cta-block { padding: 48px 32px; }
+      .cta-ed-title { font-size: clamp(2.6rem, 9vw, 3.8rem); }
+      .cta { padding: 72px 0 88px; }
       .foot-top { grid-template-columns: 1fr 1fr; }
     }
 
@@ -1981,26 +1995,24 @@
   <!-- CTA FINAL -->
   <section class="cta">
     <div class="wrap">
-      <div class="cta-block">
-        <div class="cta-inner">
-          <div>
-            <h2 class="cta-title">
-              ¿Listo para transformar<br/>
-              opiniones en <span>decisiones</span>?
-            </h2>
-            <p class="cta-sub">
-              Diseña tu primera encuesta hoy. Sin tarjeta de crédito,<br/>sin fricciones — solo resultados.
-            </p>
-          </div>
-          <div class="cta-btns">
-            <a href="#" class="btn btn-primary" style="padding:15px 36px; font-size:1rem; white-space:nowrap;">
-              Solicitar demo gratuita
-              <svg width="15" height="15" fill="none" viewBox="0 0 15 15">
-                <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </a>
-            <a href="#" class="btn btn-outline-white" style="padding:15px 28px; font-size:1rem; white-space:nowrap;">Ver funcionalidades</a>
-          </div>
+      <div class="cta-editorial">
+        <span class="cta-ed-eyebrow tag-pill">¿Listo para empezar?</span>
+        <h2 class="cta-ed-title">
+          Transforma opiniones<br/>
+          en <span class="cta-ed-hl">decisiones</span>.
+        </h2>
+        <p class="cta-ed-sub">
+          Diseña tu primera encuesta hoy. Sin tarjeta de crédito,
+          sin fricciones — solo resultados.
+        </p>
+        <div class="cta-ed-actions">
+          <a href="#" class="btn btn-primary" style="padding:16px 40px; font-size:1.02rem;">
+            Solicitar demo gratuita
+            <svg width="15" height="15" fill="none" viewBox="0 0 15 15">
+              <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="#features" class="cta-ed-link">Ver funcionalidades →</a>
         </div>
       </div>
     </div>
