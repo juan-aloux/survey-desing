@@ -1,0 +1,2383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Survey — Plataforma de Encuestas Profesional</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/splitting@1.0.6/dist/splitting.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+
+    /* ── TOKENS ── */
+    :root {
+      --primary:    #00FDC9;
+      --primary-dk: #00c9a2;
+      --accent:     #49afff;
+      --dark:       #253033;
+      --dark-90:    rgba(37,48,51,.9);
+      --light:      #f5f9fc;
+      --mid:        #e2eaef;
+      --muted:      #7a8f96;
+      --white:      #ffffff;
+
+      --font-h: 'Lexend', sans-serif;
+      --font-b: 'Source Sans 3', sans-serif;
+
+      --sh-sm: 0 2px 10px rgba(37,48,51,.07);
+      --sh-md: 0 8px 32px rgba(37,48,51,.11);
+      --sh-lg: 0 24px 64px rgba(37,48,51,.14);
+
+      --r-sm: 8px;
+      --r-md: 16px;
+      --r-lg: 24px;
+
+      --ease: 240ms cubic-bezier(.4,0,.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-b);
+      background: var(--white);
+      color: var(--dark);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ── UTIL ── */
+    .wrap { width: min(1160px, 100% - 48px); margin-inline: auto; }
+
+    .tag-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-h);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--dark);
+      background: var(--primary);
+      padding: 5px 14px 5px 10px;
+      border-radius: 999px;
+    }
+
+    .tag-pill::before {
+      content: '';
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--dark);
+      opacity: .35;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--font-h);
+      font-weight: 600;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      border: none;
+      transition: transform var(--ease), box-shadow var(--ease), background var(--ease), color var(--ease), border-color var(--ease);
+    }
+
+    .btn:hover  { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn-dark {
+      background: var(--dark);
+      color: var(--white);
+      padding: 14px 30px;
+      font-size: .95rem;
+      box-shadow: 0 4px 18px rgba(37,48,51,.25);
+    }
+    .btn-dark:hover { box-shadow: 0 8px 28px rgba(37,48,51,.35); }
+
+    .btn-ghost-dark {
+      background: transparent;
+      color: var(--muted);
+      padding: 14px 24px;
+      font-size: .95rem;
+      border: 1.5px solid var(--mid);
+    }
+    .btn-ghost-dark:hover {
+      border-color: var(--dark);
+      color: var(--dark);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--dark);
+      padding: 14px 30px;
+      font-size: .95rem;
+      box-shadow: 0 4px 20px rgba(0,253,201,.3);
+    }
+    .btn-primary:hover { background: var(--primary-dk); box-shadow: 0 8px 28px rgba(0,253,201,.42); }
+
+    .btn-outline-white {
+      background: transparent;
+      color: rgba(255,255,255,.75);
+      padding: 14px 28px;
+      font-size: .95rem;
+      border: 1.5px solid rgba(255,255,255,.2);
+    }
+    .btn-outline-white:hover { border-color: rgba(255,255,255,.6); color: var(--white); }
+
+    /* ── SECTION INTRO ── */
+    .sec-intro {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .sec-intro .tag-pill { margin-bottom: 22px; }
+
+    .sec-intro h2 {
+      font-family: var(--font-h);
+      font-weight: 800;
+      font-size: clamp(1.9rem, 3.2vw, 2.7rem);
+      letter-spacing: -.03em;
+      line-height: 1.18;
+      color: var(--dark);
+      margin-bottom: 16px;
+    }
+
+    .sec-intro p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-inline: auto;
+      line-height: 1.7;
+    }
+
+    /* ═══════════════════════════════
+       NAV
+    ═══════════════════════════════ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(37,48,51,.06);
+    }
+
+    .nav-inner {
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--font-h);
+      font-weight: 800;
+      font-size: 1.22rem;
+      letter-spacing: -.03em;
+      color: var(--dark);
+      flex-shrink: 0;
+    }
+
+    .logo-mark {
+      width: 32px; height: 32px;
+      background: var(--dark);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated pulse inside logo */
+    .logo-mark::after {
+      content: '';
+      position: absolute;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+      bottom: 5px; right: 5px;
+    }
+
+    .logo-mark svg { width: 16px; height: 16px; }
+
+    .nav-mid {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .nav-mid a {
+      font-family: var(--font-h);
+      font-size: .84rem;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: color var(--ease), background var(--ease);
+    }
+
+    .nav-mid a:hover { color: var(--dark); background: var(--light); }
+
+    .nav-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+    .nav-login {
+      font-family: var(--font-h);
+      font-size: .84rem;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: color var(--ease);
+    }
+    .nav-login:hover { color: var(--dark); }
+
+    .nav-cta {
+      font-family: var(--font-h);
+      font-size: .84rem;
+      font-weight: 700;
+      background: var(--dark);
+      color: var(--white);
+      padding: 9px 20px;
+      border-radius: 7px;
+      transition: transform var(--ease), box-shadow var(--ease);
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: var(--sh-md); }
+
+    /* ═══════════════════════════════
+       HERO  — two-column split layout
+    ═══════════════════════════════ */
+    .hero {
+      padding: 80px 0 0;
+      position: relative;
+      background: var(--white);
+      overflow: hidden;
+      background-image: radial-gradient(circle, rgba(37,48,51,.06) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    /* Blobs decorativos */
+    .hero-blob {
+      position: absolute;
+      top: -180px; right: -160px;
+      width: 620px; height: 620px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, rgba(0,253,201,.18) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-blob-2 {
+      position: absolute;
+      bottom: 40px; left: -120px;
+      width: 440px; height: 440px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(73,175,255,.1) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* ── Two-column split ── */
+    .hero-split {
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 64px;
+      align-items: stretch;
+      padding: 40px 0 56px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── LEFT: carousel ── */
+    .hero-left {
+      position: relative;
+      min-width: 0;
+    }
+
+    /* Carousel con perspectiva 3D */
+    .hero-slider {
+      perspective: 900px;
+      perspective-origin: center center;
+      min-width: 0;
+      position: relative;
+      height: 420px;
+    }
+
+    .hero-slides-track {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+    }
+
+    /* Cada slide posicionado absolutamente para el efecto z */
+    .hero-slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateZ(-160px) scale(0.82);
+      transition:
+        opacity 0.62s cubic-bezier(.22,1,.36,1),
+        transform 0.62s cubic-bezier(.22,1,.36,1);
+      will-change: transform, opacity;
+    }
+
+    /* Slide activo: entra desde el fondo — sigue absoluto para no alterar altura */
+    .hero-slide.is-active {
+      opacity: 1;
+      transform: translateZ(0) scale(1);
+      pointer-events: auto;
+      position: absolute;
+      height: 100%;
+    }
+
+    /* Slide saliendo: se aleja hacia el fondo suavemente */
+    .hero-slide.is-exit {
+      opacity: 0;
+      transform: translateZ(-200px) scale(0.78);
+      pointer-events: none;
+      transition:
+        opacity 0.7s cubic-bezier(.25,0,.4,1),
+        transform 0.7s cubic-bezier(.25,0,.4,1);
+    }
+
+    /* Card del slider — dark con degradados */
+    .hf-card {
+      background: var(--dark);
+      border-radius: var(--r-md);
+      border: 1px solid rgba(0,253,201,.1);
+      padding: 24px 26px;
+      font-family: var(--font-h);
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--ease);
+    }
+
+    /* Degradado fondo top-right verde */
+    .hf-card::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, rgba(0,253,201,.22) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* Degradado fondo bottom-left azul */
+    .hf-card::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: -40px;
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(73,175,255,.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hf-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .hf-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .hf-card-icon {
+      width: 34px; height: 34px;
+      background: rgba(0,253,201,.12);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: var(--primary);
+      font-size: 1rem;
+      border: 1px solid rgba(0,253,201,.2);
+    }
+
+    .hf-label {
+      font-size: .6rem;
+      color: rgba(255,255,255,.38);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-weight: 700;
+    }
+
+    .hf-value {
+      font-size: 3.6rem;
+      font-weight: 900;
+      color: var(--primary);
+      letter-spacing: -.04em;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .hf-value em {
+      font-style: normal;
+      font-size: 1rem;
+      color: rgba(255,255,255,.38);
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .hf-delta {
+      font-size: .7rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0,253,201,.12);
+      color: var(--primary);
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,253,201,.2);
+    }
+
+    .hf-delta.up { color: var(--primary); background: rgba(0,253,201,.12); }
+
+    /* Sparkline en card */
+    .hf-spark-wrap {
+      margin-top: 18px;
+      flex: 1;
+      min-height: 100px;
+    }
+
+    .hf-spark-wrap svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* NPS ring en card */
+    .hf-nps-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex: 1;
+      gap: 0;
+    }
+
+    .hf-nps-ring-wrap {
+      position: relative;
+      width: 160px; height: 160px;
+      flex-shrink: 0;
+    }
+
+    .nps-ring-svg { width: 160px; height: 160px; }
+
+    .nps-ring-track {
+      fill: none;
+      stroke: rgba(255,255,255,.08);
+      stroke-width: 8;
+    }
+
+    .nps-ring-fill {
+      fill: none;
+      stroke: var(--primary);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 408;
+      stroke-dashoffset: 408;
+      transform-origin: center;
+      transform: rotate(-90deg);
+      transition: stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1);
+    }
+
+    .nps-ring-fill.animated { stroke-dashoffset: 102; }
+
+    .nps-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nps-score {
+      font-family: var(--font-h);
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--primary);
+      letter-spacing: -.05em;
+      line-height: 1;
+    }
+
+    .nps-label {
+      font-size: .58rem;
+      color: rgba(255,255,255,.38);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .hf-nps-info {}
+
+    .hf-nps-title {
+      font-size: .65rem;
+      color: rgba(255,255,255,.38);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 6px;
+    }
+
+    .hf-nps-score-lbl {
+      font-size: 1.5rem;
+      color: var(--white);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+    }
+
+    /* Channel icons */
+    .hf-channel-icons {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hf-channel-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.1);
+      display: grid;
+      place-items: center;
+      color: rgba(255,255,255,.5);
+      font-size: 1rem;
+      transition: background var(--ease), color var(--ease), border-color var(--ease);
+    }
+
+    .hf-channel-icon:hover {
+      background: rgba(0,253,201,.15);
+      color: var(--primary);
+      border-color: rgba(0,253,201,.3);
+    }
+
+    /* Live dot */
+    .hv-live-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: blink 1.6s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: .3; }
+    }
+
+    .hf-live-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .hf-live-bar {
+      height: 10px;
+      background: rgba(255,255,255,.08);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .hf-live-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 999px;
+      transition: width 1.4s cubic-bezier(.4,0,.2,1);
+    }
+
+    .hf-live-bar-fill.animated { width: 72%; }
+
+    /* Dots navegación */
+    .hero-slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .hero-slider-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--mid);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.25s ease, transform 0.25s ease, width 0.25s ease;
+    }
+
+    .hero-slider-dot.is-selected {
+      background: var(--dark);
+      width: 22px;
+      border-radius: 999px;
+    }
+
+    /* ── RIGHT: text content ── */
+    .hero-right {
+      position: relative;
+      z-index: 1;
+      text-align: left;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* GSAP initial states — JS sets these via fromTo, CSS default is visible */
+    /* No opacity:0 in CSS — GSAP's fromTo handles initial state safely */
+
+    /* Splitting.js char wrappers */
+    .hero-title .word { display: inline-block; }
+    .hero-title .char { display: inline-block; }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .hero-split {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .hero-right { order: 1; }
+      .hero-left  { order: 2; }
+      .hero-actions { justify-content: flex-start; }
+    }
+
+    @media (max-width: 1024px) {
+      .hero-split { gap: 36px; }
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+      background: var(--dark);
+      border-radius: 999px;
+      padding: 8px 18px 8px 8px;
+    }
+
+    .hero-kicker-dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+    }
+
+    .hero-kicker-dot svg { width: 14px; height: 14px; color: var(--dark); }
+
+    .hero-kicker-text {
+      font-family: var(--font-h);
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.7);
+    }
+
+    /* THE headline — massive, typographic */
+    .hero-title {
+      font-family: var(--font-h);
+      font-weight: 900;
+      font-size: clamp(2.6rem, 4.2vw, 4.4rem);
+      letter-spacing: -.04em;
+      line-height: 1;
+      color: var(--dark);
+      margin-bottom: 32px;
+    }
+
+    /* Word with teal highlight box */
+    .hero-title .hl {
+      position: relative;
+      display: inline-block;
+      color: var(--dark);
+    }
+
+    .hero-title .hl::after {
+      content: '';
+      position: absolute;
+      left: -4px; right: -4px;
+      bottom: 6px;
+      height: 14px;
+      background: var(--primary);
+      z-index: -1;
+      border-radius: 3px;
+    }
+
+    /* Word outlined */
+    .hero-title .ol {
+      -webkit-text-stroke: 2.5px var(--dark);
+      color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 480px;
+      margin-bottom: 36px;
+    }
+
+    .hero-sub strong { font-weight: 600; color: var(--dark); }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+    }
+
+    /* Stats grid below hero */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      padding: 32px 0 64px;
+    }
+
+    .stat-card {
+      background: var(--dark);
+      border-radius: var(--r-md);
+      padding: 24px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+      transition: transform var(--ease);
+    }
+
+    .stat-card:hover { transform: translateY(-2px); }
+
+    /* accent corner glow */
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,253,201,.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .stat-card:nth-child(2)::before { background: radial-gradient(circle, rgba(73,175,255,.18) 0%, transparent 70%); }
+    .stat-card:nth-child(3)::before { background: radial-gradient(circle, rgba(0,253,201,.15) 0%, transparent 70%); }
+    .stat-card:nth-child(4)::before { background: radial-gradient(circle, rgba(73,175,255,.15) 0%, transparent 70%); }
+
+    .stat-num {
+      font-family: var(--font-h);
+      font-size: 2.4rem;
+      font-weight: 900;
+      letter-spacing: -.05em;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .stat-num em {
+      font-style: normal;
+      color: var(--primary);
+    }
+
+    .stat-label {
+      font-size: .82rem;
+      color: rgba(255,255,255,.42);
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    /* ═══════════════════════════════
+       FEATURES
+    ═══════════════════════════════ */
+    .features {
+      padding: 96px 0;
+      background: var(--light);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+    }
+
+    /* Card base */
+    .fc {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      border: 1px solid rgba(37,48,51,.07);
+      box-shadow: var(--sh-sm);
+      padding: 36px 32px;
+      transition: transform var(--ease), box-shadow var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fc:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--sh-lg);
+    }
+
+    /* Top accent line on hover */
+    .fc::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--ease);
+    }
+
+    .fc:hover::after { transform: scaleX(1); }
+
+    /* Layout spans */
+    .fc-span-7 { grid-column: span 7; }
+    .fc-span-5 { grid-column: span 5; }
+    .fc-span-4 { grid-column: span 4; }
+    .fc-span-8 { grid-column: span 8; }
+    .fc-span-6 { grid-column: span 6; }
+
+    .fc-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: rgba(0,253,201,.12);
+      display: grid;
+      place-items: center;
+      margin-bottom: 22px;
+    }
+
+    .fc-icon svg { width: 22px; height: 22px; color: var(--primary-dk); }
+
+    .fc h3 {
+      font-family: var(--font-h);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: -.02em;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+
+    .fc p {
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.68;
+    }
+
+    /* Tall feature card with visual */
+    .fc-tall {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .fc-visual {
+      flex: 1;
+      background: var(--light);
+      border-radius: var(--r-sm);
+      padding: 18px;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* Mini chart bars */
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .72rem;
+      color: var(--muted);
+      font-family: var(--font-h);
+    }
+
+    .bar-lbl { width: 64px; flex-shrink: 0; font-size: .7rem; }
+
+    .bar-track {
+      flex: 1;
+      height: 9px;
+      background: var(--mid);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .bar-pct { width: 32px; text-align: right; flex-shrink: 0; font-size: .7rem; }
+
+    /* Channel chips */
+    .channel-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .ch-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-h);
+      font-size: .75rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1.5px solid var(--mid);
+      color: var(--dark);
+      background: var(--white);
+      transition: border-color var(--ease), background var(--ease);
+    }
+
+    .ch-chip:hover { border-color: var(--primary); background: rgba(0,253,201,.05); }
+
+    /* Dark feature card */
+    .fc-dark {
+      background: var(--dark);
+      border-color: transparent;
+    }
+
+    .fc-dark h3 { color: var(--white); }
+    .fc-dark p  { color: rgba(255,255,255,.5); }
+
+    .fc-dark .fc-icon {
+      background: rgba(0,253,201,.15);
+    }
+
+    .fc-dark .fc-icon svg { color: var(--primary); }
+
+    .fc-dark::after {
+      background: linear-gradient(90deg, var(--primary), rgba(73,175,255,.5));
+    }
+
+    /* ═══════════════════════════════
+       HOW
+    ═══════════════════════════════ */
+    .how {
+      padding: 96px 0;
+      background: var(--white);
+    }
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      border: 1px solid var(--mid);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+
+    .how-step {
+      padding: 48px 40px;
+      position: relative;
+      transition: background var(--ease);
+    }
+
+    .how-step:not(:last-child) {
+      border-right: 1px solid var(--mid);
+    }
+
+    .how-step:hover { background: var(--light); }
+
+    .step-n {
+      font-family: var(--font-h);
+      font-size: 4rem;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -.04em;
+      margin-bottom: 28px;
+      color: var(--mid);
+    }
+
+    .how-step:nth-child(1) .step-n { color: var(--primary); }
+    .how-step:nth-child(2) .step-n { color: rgba(37,48,51,.15); }
+    .how-step:nth-child(3) .step-n { color: rgba(73,175,255,.3); }
+
+    .how-step h3 {
+      font-family: var(--font-h);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      color: var(--dark);
+      margin-bottom: 12px;
+    }
+
+    .how-step p {
+      font-size: .92rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .how-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-h);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1.5px solid var(--mid);
+      color: var(--muted);
+    }
+
+    /* ═══════════════════════════════
+       PRICING
+    ═══════════════════════════════ */
+    .pricing {
+      padding: 96px 0;
+      background: var(--light);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .pc {
+      background: var(--white);
+      border-radius: var(--r-lg);
+      border: 1.5px solid rgba(37,48,51,.07);
+      padding: 40px 32px;
+      box-shadow: var(--sh-sm);
+      position: relative;
+      transition: transform var(--ease), box-shadow var(--ease);
+    }
+
+    .pc:hover { transform: translateY(-4px); box-shadow: var(--sh-lg); }
+
+    /* Middle plan highlighted */
+    .pc-pop {
+      background: var(--dark);
+      border-color: var(--dark);
+    }
+
+    .pc-badge {
+      position: absolute;
+      top: -13px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: var(--dark);
+      font-family: var(--font-h);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .plan-label {
+      font-family: var(--font-h);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .pc-pop .plan-label { color: rgba(255,255,255,.4); }
+
+    .plan-price {
+      display: flex;
+      align-items: baseline;
+      gap: 3px;
+      margin-bottom: 4px;
+    }
+
+    .pp-sym {
+      font-family: var(--font-h);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--muted);
+      align-self: flex-start;
+      padding-top: 6px;
+    }
+
+    .pp-num {
+      font-family: var(--font-h);
+      font-size: 3.2rem;
+      font-weight: 900;
+      letter-spacing: -.05em;
+      color: var(--dark);
+      line-height: 1;
+    }
+
+    .pc-pop .pp-sym { color: rgba(255,255,255,.4); }
+    .pc-pop .pp-num { color: var(--white); }
+
+    .pp-period {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .pc-pop .pp-period { color: rgba(255,255,255,.4); }
+
+    .pp-desc {
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.6;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--mid);
+    }
+
+    .pc-pop .pp-desc {
+      color: rgba(255,255,255,.5);
+      border-bottom-color: rgba(255,255,255,.1);
+    }
+
+    .pp-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      margin-bottom: 28px;
+    }
+
+    .pp-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: .87rem;
+      color: var(--dark);
+      line-height: 1.45;
+    }
+
+    .pc-pop .pp-features li { color: rgba(255,255,255,.8); }
+
+    .pp-check {
+      width: 17px; height: 17px;
+      border-radius: 50%;
+      background: rgba(0,253,201,.14);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .pc-pop .pp-check { background: rgba(0,253,201,.22); }
+
+    .pp-check svg {
+      width: 9px; height: 9px;
+      color: var(--primary-dk);
+    }
+
+    .btn-pop {
+      width: 100%;
+      justify-content: center;
+      background: var(--primary);
+      color: var(--dark);
+      padding: 13px;
+      font-size: .92rem;
+      box-shadow: 0 4px 18px rgba(0,253,201,.35);
+    }
+
+    .btn-pop:hover { background: var(--primary-dk); box-shadow: 0 8px 28px rgba(0,253,201,.45); }
+
+    .btn-plan {
+      width: 100%;
+      justify-content: center;
+      background: transparent;
+      color: var(--dark);
+      border: 1.5px solid var(--mid);
+      padding: 13px;
+      font-size: .92rem;
+    }
+
+    .btn-plan:hover { border-color: var(--dark); }
+
+    /* ═══════════════════════════════
+       CTA FINAL
+    ═══════════════════════════════ */
+    .cta {
+      padding: 0;
+      background: var(--white);
+    }
+
+    .cta-block {
+      background: var(--dark);
+      border-radius: var(--r-lg);
+      padding: 80px 72px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 80px;
+    }
+
+    .cta-block::before {
+      content: '';
+      position: absolute;
+      top: -120px; right: -80px;
+      width: 560px; height: 560px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,253,201,.14) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-block::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: 10%;
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(73,175,255,.09) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .cta-title {
+      font-family: var(--font-h);
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -.04em;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .cta-title span { color: var(--primary); }
+
+    .cta-sub {
+      font-size: 1rem;
+      color: rgba(255,255,255,.5);
+      line-height: 1.65;
+    }
+
+    .cta-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+
+    /* ═══════════════════════════════
+       FOOTER
+    ═══════════════════════════════ */
+    footer {
+      background: var(--dark);
+      padding: 60px 0 32px;
+    }
+
+    .foot-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      padding-bottom: 48px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+
+    .foot-brand .logo { color: var(--white); margin-bottom: 14px; }
+
+    .foot-brand .logo-mark { background: rgba(255,255,255,.1); }
+
+    .foot-tagline {
+      font-size: .86rem;
+      color: rgba(255,255,255,.38);
+      line-height: 1.65;
+      max-width: 240px;
+      margin-bottom: 22px;
+    }
+
+    .foot-socials { display: flex; gap: 8px; }
+
+    .soc {
+      width: 32px; height: 32px;
+      border-radius: 7px;
+      border: 1px solid rgba(255,255,255,.1);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-h);
+      font-size: .7rem;
+      font-weight: 700;
+      color: rgba(255,255,255,.35);
+      transition: border-color var(--ease), color var(--ease);
+    }
+
+    .soc:hover { border-color: var(--primary); color: var(--primary); }
+
+    .foot-col h4 {
+      font-family: var(--font-h);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.28);
+      margin-bottom: 16px;
+    }
+
+    .foot-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .foot-links a {
+      font-size: .86rem;
+      color: rgba(255,255,255,.45);
+      transition: color var(--ease);
+    }
+
+    .foot-links a:hover { color: var(--white); }
+
+    .foot-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .foot-bottom p {
+      font-size: .78rem;
+      color: rgba(255,255,255,.22);
+    }
+
+    .foot-btm-links {
+      display: flex; gap: 20px; list-style: none;
+    }
+
+    .foot-btm-links a {
+      font-size: .78rem;
+      color: rgba(255,255,255,.25);
+      transition: color var(--ease);
+    }
+
+    .foot-btm-links a:hover { color: rgba(255,255,255,.6); }
+
+    /* ═══════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════ */
+    @media (max-width: 1024px) {
+      .fc-span-7, .fc-span-5, .fc-span-8, .fc-span-4, .fc-span-6 {
+        grid-column: span 6;
+      }
+      .foot-top { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-mid { display: none; }
+      .hero-title { font-size: clamp(2.6rem, 9vw, 3.8rem); }
+      .hero-actions { flex-wrap: wrap; }
+      .how-grid { grid-template-columns: 1fr; border-radius: var(--r-md); }
+      .how-step:not(:last-child) { border-right: none; border-bottom: 1px solid var(--mid); }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin-inline: auto; }
+      .fc-span-7, .fc-span-5, .fc-span-8, .fc-span-4, .fc-span-6 { grid-column: span 12; }
+      .cta-inner { grid-template-columns: 1fr; }
+      .cta-btns { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+      .cta-block { padding: 48px 32px; }
+      .foot-top { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 520px) {
+      .foot-top { grid-template-columns: 1fr; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="wrap nav-inner">
+      <a href="#" class="logo">
+        <div class="logo-mark">
+          <!-- Survey mark: stacked lines -->
+          <svg viewBox="0 0 16 16" fill="none">
+            <rect x="1" y="3"  width="10" height="1.8" rx=".9" fill="white" opacity=".9"/>
+            <rect x="1" y="7"  width="14" height="1.8" rx=".9" fill="white" opacity=".6"/>
+            <rect x="1" y="11" width="8"  height="1.8" rx=".9" fill="white" opacity=".35"/>
+          </svg>
+        </div>
+        Survey
+      </a>
+
+      <nav class="nav-mid">
+        <a href="#features">Funcionalidades</a>
+        <a href="#how">Cómo funciona</a>
+        <a href="#pricing">Precios</a>
+        <a href="#">Documentación</a>
+      </nav>
+
+      <div class="nav-right">
+        <a href="#" class="nav-login">Iniciar sesión</a>
+        <a href="#" class="nav-cta">Solicitar demo</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-blob"></div>
+    <div class="hero-blob-2"></div>
+    <div class="wrap">
+
+      <div class="hero-split">
+
+        <!-- LEFT: Texto y CTA -->
+        <div class="hero-right">
+
+          <div class="hero-kicker">
+            <div class="hero-kicker-dot">
+              <svg viewBox="0 0 14 14" fill="none">
+                <rect x="1" y="2.5" width="8" height="1.4" rx=".7" fill="currentColor"/>
+                <rect x="1" y="6"   width="12" height="1.4" rx=".7" fill="currentColor" opacity=".7"/>
+                <rect x="1" y="9.5" width="6"  height="1.4" rx=".7" fill="currentColor" opacity=".45"/>
+              </svg>
+            </div>
+            <span class="hero-kicker-text">Plataforma de encuestas profesional</span>
+          </div>
+
+          <h1 class="hero-title" data-splitting>
+            Transforma<br/>
+            <span class="hl">opiniones</span><br/>
+            en <span class="ol">datos</span>.
+          </h1>
+
+          <p class="hero-sub">
+            Diseña cuestionarios profesionales, distribúyelos en múltiples canales y obtén insights accionables de forma automática.
+            <strong>Sin fricción. Sin complejidad.</strong>
+          </p>
+
+          <div class="hero-actions">
+            <a href="#" class="btn btn-dark">
+              Solicitar demo
+              <svg width="15" height="15" fill="none" viewBox="0 0 15 15">
+                <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="#" class="btn btn-ghost-dark">Ver demo</a>
+          </div>
+
+        </div><!-- /hero-right -->
+
+        <!-- RIGHT: Slider de métricas -->
+        <div class="hero-left">
+          <div class="hero-slider" id="hero-slider">
+            <div class="hero-slides-track">
+
+              <!-- Slide 1: Respuestas -->
+              <div class="hero-slide">
+                <div class="hf-card">
+                  <div class="hf-card-header">
+                    <div class="hf-label">Respuestas</div>
+                    <div class="hf-card-icon"><span class="mdi mdi-chart-line"></span></div>
+                  </div>
+                  <div class="hf-value" id="hf-resp-val">0<em>k</em></div>
+                  <div class="hf-delta up">↑ 18% vs mes anterior</div>
+                  <div class="hf-spark-wrap" id="hf-spark-container"></div>
+                </div>
+              </div>
+
+              <!-- Slide 2: Tasa de respuesta -->
+              <div class="hero-slide">
+                <div class="hf-card">
+                  <div class="hf-card-header">
+                    <div class="hf-label">Tasa de respuesta</div>
+                    <div class="hf-card-icon"><span class="mdi mdi-percent"></span></div>
+                  </div>
+                  <div class="hf-value" id="hf-rate-val">0<em>%</em></div>
+                  <div class="hf-delta up" style="width:fit-content;">↑ 4 pts este mes</div>
+
+                  <!-- Stats secundarios — llenan el espacio central -->
+                  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:24px;">
+                    <div style="background:rgba(255,255,255,.05); border-radius:10px; padding:14px 12px; border:1px solid rgba(255,255,255,.07);">
+                      <div style="font-size:.55rem; color:rgba(255,255,255,.35); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;">Este mes</div>
+                      <div style="font-size:1.3rem; font-weight:900; color:var(--primary); letter-spacing:-.03em; line-height:1;">94%</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,.05); border-radius:10px; padding:14px 12px; border:1px solid rgba(255,255,255,.07);">
+                      <div style="font-size:.55rem; color:rgba(255,255,255,.35); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;">Mes ant.</div>
+                      <div style="font-size:1.3rem; font-weight:900; color:rgba(255,255,255,.7); letter-spacing:-.03em; line-height:1;">90%</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,.05); border-radius:10px; padding:14px 12px; border:1px solid rgba(255,255,255,.07);">
+                      <div style="font-size:.55rem; color:rgba(255,255,255,.35); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;">Objetivo</div>
+                      <div style="font-size:1.3rem; font-weight:900; color:rgba(255,255,255,.4); letter-spacing:-.03em; line-height:1;">100%</div>
+                    </div>
+                  </div>
+
+                  <div style="flex:1;"></div>
+                  <div style="padding-top:20px;">
+                    <div style="font-size:.65rem; color:rgba(255,255,255,.38); text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px; font-weight:700;">Progreso hacia objetivo</div>
+                    <div style="height:8px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden;">
+                      <div id="hf-rate-bar" style="height:100%; width:0%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:999px; transition:width 1.4s cubic-bezier(.4,0,.2,1);"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:.65rem; color:rgba(255,255,255,.28); font-weight:600;">
+                      <span>0%</span><span>Objetivo: 100%</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 3: NPS / Satisfacción -->
+              <div class="hero-slide">
+                <div class="hf-card">
+                  <div class="hf-card-header">
+                    <div class="hf-label">Satisfacción NPS</div>
+                    <div class="hf-card-icon"><span class="mdi mdi-emoticon-happy-outline"></span></div>
+                  </div>
+                  <div class="hf-nps-inner">
+                    <div class="hf-nps-ring-wrap">
+                      <svg class="nps-ring-svg" viewBox="0 0 160 160">
+                        <circle class="nps-ring-track" cx="80" cy="80" r="65"/>
+                        <circle class="nps-ring-fill" id="hf-nps-ring" cx="80" cy="80" r="65"/>
+                      </svg>
+                      <div class="nps-center">
+                        <div class="nps-score" id="hf-nps-val">0</div>
+                        <div class="nps-label">NPS</div>
+                      </div>
+                    </div>
+                    <div class="hf-nps-info" style="margin-top:20px; text-align:center;">
+                      <div class="hf-nps-title" style="text-align:center;">Calificación general</div>
+                      <div class="hf-nps-score-lbl">Excelente</div>
+                      <div style="display:flex; justify-content:center; margin-top:10px;">
+                        <div class="hf-delta up">↑ 7 pts este mes</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 4: Distribución -->
+              <div class="hero-slide">
+                <div class="hf-card">
+                  <div class="hf-card-header">
+                    <div class="hf-label">Canales de distribución</div>
+                    <div class="hf-card-icon"><span class="mdi mdi-share-variant"></span></div>
+                  </div>
+                  <div class="hf-value">6<em>+ canales</em></div>
+
+                  <!-- Canal breakdown con barras -->
+                  <div style="display:flex; flex-direction:column; gap:10px; margin-top:18px; flex:1;">
+
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <div style="width:28px; height:28px; border-radius:8px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); display:grid; place-items:center; flex-shrink:0; color:rgba(255,255,255,.5); font-size:.9rem;"><span class="mdi mdi-email-outline"></span></div>
+                      <div style="flex:1; min-width:0;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                          <span style="font-size:.68rem; font-weight:700; color:rgba(255,255,255,.7); font-family:var(--font-h);">Email</span>
+                          <span style="font-size:.68rem; font-weight:700; color:var(--primary); font-family:var(--font-h);">42%</span>
+                        </div>
+                        <div style="height:5px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden;">
+                          <div style="width:42%; height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:999px;"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <div style="width:28px; height:28px; border-radius:8px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); display:grid; place-items:center; flex-shrink:0; color:rgba(255,255,255,.5); font-size:.9rem;"><span class="mdi mdi-whatsapp"></span></div>
+                      <div style="flex:1; min-width:0;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                          <span style="font-size:.68rem; font-weight:700; color:rgba(255,255,255,.7); font-family:var(--font-h);">WhatsApp</span>
+                          <span style="font-size:.68rem; font-weight:700; color:var(--primary); font-family:var(--font-h);">28%</span>
+                        </div>
+                        <div style="height:5px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden;">
+                          <div style="width:28%; height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:999px;"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <div style="width:28px; height:28px; border-radius:8px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); display:grid; place-items:center; flex-shrink:0; color:rgba(255,255,255,.5); font-size:.9rem;"><span class="mdi mdi-link-variant"></span></div>
+                      <div style="flex:1; min-width:0;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                          <span style="font-size:.68rem; font-weight:700; color:rgba(255,255,255,.7); font-family:var(--font-h);">Link directo</span>
+                          <span style="font-size:.68rem; font-weight:700; color:var(--primary); font-family:var(--font-h);">18%</span>
+                        </div>
+                        <div style="height:5px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden;">
+                          <div style="width:18%; height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:999px;"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <div style="width:28px; height:28px; border-radius:8px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); display:grid; place-items:center; flex-shrink:0; color:rgba(255,255,255,.5); font-size:.9rem;"><span class="mdi mdi-qrcode"></span></div>
+                      <div style="flex:1; min-width:0;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                          <span style="font-size:.68rem; font-weight:700; color:rgba(255,255,255,.7); font-family:var(--font-h);">QR Code</span>
+                          <span style="font-size:.68rem; font-weight:700; color:var(--primary); font-family:var(--font-h);">7%</span>
+                        </div>
+                        <div style="height:5px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden;">
+                          <div style="width:7%; height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:999px;"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <div style="width:28px; height:28px; border-radius:8px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1); display:grid; place-items:center; flex-shrink:0; color:rgba(255,255,255,.5); font-size:.9rem;"><span class="mdi mdi-web"></span></div>
+                      <div style="flex:1; min-width:0;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                          <span style="font-size:.68rem; font-weight:700; color:rgba(255,255,255,.7); font-family:var(--font-h);">Embed web</span>
+                          <span style="font-size:.68rem; font-weight:700; color:var(--primary); font-family:var(--font-h);">5%</span>
+                        </div>
+                        <div style="height:5px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden;">
+                          <div style="width:5%; height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:999px;"></div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <!-- Slide 5: Últimos 28 días (sparkline grande) -->
+              <div class="hero-slide">
+                <div class="hf-card">
+                  <div class="hf-card-header">
+                    <div class="hf-label">Últimos 28 días</div>
+                    <div class="hf-card-icon"><span class="mdi mdi-calendar-month-outline"></span></div>
+                  </div>
+                  <div style="display:flex; justify-content:space-between; margin-bottom:16px; padding:0 4px;">
+                    <div>
+                      <div style="font-size:.6rem; color:rgba(255,255,255,.38); text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px;">Pico</div>
+                      <div style="font-size:1.8rem; font-weight:900; color:var(--primary); letter-spacing:-.04em; line-height:1;">448</div>
+                    </div>
+                    <div>
+                      <div style="font-size:.6rem; color:rgba(255,255,255,.38); text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px;">Promedio</div>
+                      <div style="font-size:1.8rem; font-weight:900; color:var(--white); letter-spacing:-.04em; line-height:1;">286</div>
+                    </div>
+                    <div>
+                      <div style="font-size:.6rem; color:rgba(255,255,255,.38); text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px;">Total</div>
+                      <div style="font-size:1.8rem; font-weight:900; color:var(--white); letter-spacing:-.04em; line-height:1;">12.4<span style="font-size:.9rem; color:rgba(255,255,255,.38); font-weight:400;">k</span></div>
+                    </div>
+                  </div>
+                  <div class="hf-spark-wrap" id="hf-spark-container-2" style="min-height:120px;"></div>
+                </div>
+              </div>
+
+              <!-- Slide 6: En vivo -->
+              <div class="hero-slide">
+                <div class="hf-card">
+                  <div class="hf-card-header">
+                    <div class="hf-live-row">
+                      <div class="hv-live-dot"></div>
+                      <div class="hf-label" style="margin-bottom:0; color:var(--primary);">En vivo ahora</div>
+                    </div>
+                    <div class="hf-card-icon"><span class="mdi mdi-pulse"></span></div>
+                  </div>
+                  <div class="hf-value">448<em> resp. hoy</em></div>
+                  <div class="hf-delta up" style="margin-top:8px; width:fit-content;">↑ activo</div>
+
+                  <!-- Stats secundarios en vivo -->
+                  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:24px;">
+                    <div style="background:rgba(255,255,255,.05); border-radius:10px; padding:14px 12px; border:1px solid rgba(255,255,255,.07);">
+                      <div style="font-size:.55rem; color:rgba(255,255,255,.35); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;">Pico hoy</div>
+                      <div style="font-size:1.3rem; font-weight:900; color:var(--primary); letter-spacing:-.03em; line-height:1;">620</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,.05); border-radius:10px; padding:14px 12px; border:1px solid rgba(255,255,255,.07);">
+                      <div style="font-size:.55rem; color:rgba(255,255,255,.35); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;">Últ. hora</div>
+                      <div style="font-size:1.3rem; font-weight:900; color:rgba(255,255,255,.7); letter-spacing:-.03em; line-height:1;">38</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,.05); border-radius:10px; padding:14px 12px; border:1px solid rgba(255,255,255,.07);">
+                      <div style="font-size:.55rem; color:rgba(255,255,255,.35); text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px;">Promedio</div>
+                      <div style="font-size:1.3rem; font-weight:900; color:rgba(255,255,255,.4); letter-spacing:-.03em; line-height:1;">286</div>
+                    </div>
+                  </div>
+
+                  <div style="flex:1;"></div>
+
+                  <!-- Barra de progreso al fondo -->
+                  <div>
+                    <div style="font-size:.65rem; color:rgba(255,255,255,.38); text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px; font-weight:700;">72% del pico diario</div>
+                    <div class="hf-live-bar">
+                      <div class="hf-live-bar-fill" id="hf-live-bar"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:.65rem; color:rgba(255,255,255,.28); font-weight:600;">
+                      <span>448 resp. hoy</span><span>Pico: 620</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /hero-slides-track -->
+          </div><!-- /hero-slider -->
+
+          <!-- Dots -->
+          <div class="hero-slider-dots" id="hero-slider-dots"></div>
+        </div><!-- /hero-left -->
+
+      </div><!-- /hero-split -->
+
+      <!-- Stats grid -->
+
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <div class="wrap">
+      <div class="sec-intro">
+        <span class="tag-pill">Funcionalidades</span>
+        <h2>Todo lo que necesitas<br/>para recopilar datos con confianza</h2>
+        <p>Herramientas diseñadas para que obtengas más respuestas y mejores insights, sin complicaciones técnicas.</p>
+      </div>
+
+      <div class="features-grid">
+
+        <!-- Diseño — grande -->
+        <div class="fc fc-tall fc-span-7">
+          <div class="fc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="3"/>
+              <path d="M3 9h18M9 21V9"/>
+            </svg>
+          </div>
+          <h3>Diseño de Encuestas Intuitivo</h3>
+          <p>Crea cuestionarios visualmente atractivos con editor drag & drop. Optimizados para cualquier dispositivo, aumentan la tasa de respuesta y la calidad de datos recopilados.</p>
+          <div class="fc-visual">
+            <div style="background:white; border-radius:8px; padding:14px; border:1px solid var(--mid);">
+              <div style="font-family:var(--font-h); font-size:.7rem; font-weight:700; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; margin-bottom:12px;">Vista previa</div>
+              <div style="font-family:var(--font-h); font-size:.85rem; font-weight:700; color:var(--dark); margin-bottom:10px;">¿Recomendarías nuestro producto?</div>
+              <div style="display:flex; gap:6px; margin-bottom:12px;">
+                <div style="flex:1; padding:8px 6px; background:rgba(0,253,201,.12); border:1.5px solid var(--primary); border-radius:6px; font-size:.7rem; text-align:center; font-family:var(--font-h); font-weight:700; color:var(--dark);">Sí ✓</div>
+                <div style="flex:1; padding:8px 6px; background:var(--light); border:1px solid var(--mid); border-radius:6px; font-size:.7rem; text-align:center; font-family:var(--font-h); color:var(--muted);">No</div>
+                <div style="flex:1; padding:8px 6px; background:var(--light); border:1px solid var(--mid); border-radius:6px; font-size:.7rem; text-align:center; font-family:var(--font-h); color:var(--muted);">Quizás</div>
+              </div>
+              <div style="height:5px; background:var(--mid); border-radius:999px; overflow:hidden;">
+                <div style="width:60%; height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:999px;"></div>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:.66rem; color:var(--muted);">
+                <span>Pregunta 3 / 5</span><span style="color:var(--primary-dk); font-weight:700;">60%</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;">
+              <span style="font-family:var(--font-h); font-size:.68rem; font-weight:600; padding:4px 10px; border:1.5px solid var(--mid); border-radius:999px; color:var(--muted);">Opción múltiple</span>
+              <span style="font-family:var(--font-h); font-size:.68rem; font-weight:600; padding:4px 10px; border:1.5px solid var(--mid); border-radius:999px; color:var(--muted);">Escala Likert</span>
+              <span style="font-family:var(--font-h); font-size:.68rem; font-weight:600; padding:4px 10px; border:1.5px solid var(--mid); border-radius:999px; color:var(--muted);">NPS</span>
+              <span style="font-family:var(--font-h); font-size:.68rem; font-weight:600; padding:4px 10px; background:var(--primary); border:1.5px solid var(--primary); border-radius:999px; color:var(--dark);">+37 más</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Análisis -->
+        <div class="fc fc-tall fc-span-5 fc-dark">
+          <div class="fc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </div>
+          <h3>Análisis y Reportes en Tiempo Real</h3>
+          <p>Identifica tendencias y toma decisiones estratégicas más rápido con dashboards generados automáticamente.</p>
+          <div style="margin-top:24px; background:rgba(255,255,255,.06); border-radius:10px; padding:18px; display:flex; flex-direction:column; gap:12px;">
+            <div class="bar-row">
+              <span class="bar-lbl" style="color:rgba(255,255,255,.45);">Muy sat.</span>
+              <div class="bar-track"><div class="bar-fill" style="width:82%; background:linear-gradient(90deg,var(--primary),var(--accent));"></div></div>
+              <span class="bar-pct" style="color:rgba(255,255,255,.5);">82%</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-lbl" style="color:rgba(255,255,255,.45);">Satisfecho</span>
+              <div class="bar-track"><div class="bar-fill" style="width:60%; background:var(--accent);"></div></div>
+              <span class="bar-pct" style="color:rgba(255,255,255,.5);">60%</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-lbl" style="color:rgba(255,255,255,.45);">Neutral</span>
+              <div class="bar-track"><div class="bar-fill" style="width:28%; background:rgba(255,255,255,.15);"></div></div>
+              <span class="bar-pct" style="color:rgba(255,255,255,.5);">28%</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-lbl" style="color:rgba(255,255,255,.45);">Insatisf.</span>
+              <div class="bar-track"><div class="bar-fill" style="width:10%; background:rgba(255,100,100,.4);"></div></div>
+              <span class="bar-pct" style="color:rgba(255,255,255,.5);">10%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Distribución -->
+        <div class="fc fc-span-4">
+          <div class="fc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+          </div>
+          <h3>Múltiples Canales de Distribución</h3>
+          <p>Llega a tu audiencia sin importar dónde esté. Comparte por email, redes sociales, QR o embebido en tu sitio.</p>
+          <div class="channel-chips">
+            <span class="ch-chip">📧 Email</span>
+            <span class="ch-chip">💬 WhatsApp</span>
+            <span class="ch-chip">📱 QR</span>
+            <span class="ch-chip">🔗 Link</span>
+            <span class="ch-chip">🌐 Embed</span>
+          </div>
+        </div>
+
+        <!-- Feedback centralizado -->
+        <div class="fc fc-span-4">
+          <div class="fc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </div>
+          <h3>Feedback Centralizado</h3>
+          <p>Consolida todas las respuestas en un único panel. Compara y contrasta datos entre segmentos para una visión integral.</p>
+        </div>
+
+        <!-- Personalización -->
+        <div class="fc fc-span-4">
+          <div class="fc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <h3>Personalización y Segmentación</h3>
+          <p>Aplica la identidad visual de tu empresa y segmenta tu audiencia para obtener retroalimentación más específica de cada grupo.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="wrap">
+      <div class="sec-intro">
+        <span class="tag-pill">Proceso</span>
+        <h2>De la idea al insight<br/>en tres pasos</h2>
+        <p>Sin conocimientos técnicos. Sin configuraciones complejas.</p>
+      </div>
+
+      <div class="how-grid">
+        <div class="how-step">
+          <div class="step-n">01</div>
+          <h3>Crea tu encuesta</h3>
+          <p>Elige una plantilla o diseña desde cero con el editor visual. Añade preguntas, lógica condicional y tu branding en minutos.</p>
+          <span class="how-tag">⚡ Promedio 8 min</span>
+        </div>
+        <div class="how-step">
+          <div class="step-n">02</div>
+          <h3>Distribúyela</h3>
+          <p>Comparte por los canales que prefieras. Email, redes sociales, código QR o enlace directo. Llega a tu audiencia donde está.</p>
+          <span class="how-tag">6+ canales</span>
+        </div>
+        <div class="how-step">
+          <div class="step-n">03</div>
+          <h3>Analiza resultados</h3>
+          <p>Los datos llegan en tiempo real. Visualiza gráficas, exporta reportes y comparte insights con tu equipo al instante.</p>
+          <span class="how-tag">PDF · Excel · CSV</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <div class="sec-intro">
+        <span class="tag-pill">Precios</span>
+        <h2>Planes claros, sin sorpresas</h2>
+        <p>Elige el plan que se adapta a tu equipo y escala cuando lo necesites.</p>
+      </div>
+
+      <div class="pricing-grid">
+
+        <!-- Starter -->
+        <div class="pc">
+          <p class="plan-label">Starter</p>
+          <div class="plan-price">
+            <span class="pp-sym">$</span>
+            <span class="pp-num">0</span>
+          </div>
+          <p class="pp-period">Gratis para siempre</p>
+          <p class="pp-desc">Para equipos pequeños que quieren empezar a recopilar feedback sin compromisos.</p>
+          <ul class="pp-features">
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>3 encuestas activas</li>
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>100 respuestas / mes</li>
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>Reportes básicos</li>
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>Distribución por link y email</li>
+          </ul>
+          <a href="#" class="btn btn-plan">Empezar gratis</a>
+        </div>
+
+        <!-- Pro -->
+        <div class="pc pc-pop">
+          <div class="pc-badge">Más popular</div>
+          <p class="plan-label">Pro</p>
+          <div class="plan-price">
+            <span class="pp-sym">$</span>
+            <span class="pp-num">49</span>
+          </div>
+          <p class="pp-period">por usuario / mes</p>
+          <p class="pp-desc">Para equipos en crecimiento que necesitan personalización, análisis avanzado y más respuestas.</p>
+          <ul class="pp-features">
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>Encuestas ilimitadas</li>
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>10,000 respuestas / mes</li>
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>Branding personalizado</li>
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>Lógica condicional avanzada</li>
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>Exportar PDF · Excel · CSV</li>
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>Soporte prioritario</li>
+          </ul>
+          <a href="#" class="btn btn-pop">Solicitar demo</a>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="pc">
+          <p class="plan-label">Enterprise</p>
+          <div class="plan-price">
+            <span class="pp-num" style="font-size:2rem; letter-spacing:-.02em;">A medida</span>
+          </div>
+          <p class="pp-period">Precio según uso</p>
+          <p class="pp-desc">Para organizaciones que necesitan control total, integraciones avanzadas y soporte dedicado.</p>
+          <ul class="pp-features">
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>Todo lo de Pro</li>
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>Respuestas ilimitadas</li>
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>SSO / SAML · API REST</li>
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>SLA garantizado</li>
+            <li><div class="pp-check"><svg viewBox="0 0 9 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="1,4.5 3.5,7 8,2"/></svg></div>Customer success manager</li>
+          </ul>
+          <a href="#" class="btn btn-plan">Hablar con ventas</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta">
+    <div class="wrap">
+      <div class="cta-block">
+        <div class="cta-inner">
+          <div>
+            <h2 class="cta-title">
+              ¿Listo para transformar<br/>
+              opiniones en <span>decisiones</span>?
+            </h2>
+            <p class="cta-sub">
+              Diseña tu primera encuesta hoy. Sin tarjeta de crédito,<br/>sin fricciones — solo resultados.
+            </p>
+          </div>
+          <div class="cta-btns">
+            <a href="#" class="btn btn-primary" style="padding:15px 36px; font-size:1rem; white-space:nowrap;">
+              Solicitar demo gratuita
+              <svg width="15" height="15" fill="none" viewBox="0 0 15 15">
+                <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="#" class="btn btn-outline-white" style="padding:15px 28px; font-size:1rem; white-space:nowrap;">Ver funcionalidades</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-top">
+        <div class="foot-brand">
+          <div class="logo" style="color:white; margin-bottom:14px;">
+            <div class="logo-mark" style="background:rgba(255,255,255,.1);">
+              <svg viewBox="0 0 16 16" fill="none">
+                <rect x="1" y="3"  width="10" height="1.8" rx=".9" fill="white" opacity=".9"/>
+                <rect x="1" y="7"  width="14" height="1.8" rx=".9" fill="white" opacity=".6"/>
+                <rect x="1" y="11" width="8"  height="1.8" rx=".9" fill="white" opacity=".35"/>
+              </svg>
+            </div>
+            Survey
+          </div>
+          <p class="foot-tagline">Plataforma avanzada para la creación y análisis de encuestas. Transforma opiniones en datos valiosos.</p>
+          <div class="foot-socials">
+            <a href="#" class="soc">X</a>
+            <a href="#" class="soc">in</a>
+            <a href="#" class="soc">yt</a>
+          </div>
+        </div>
+
+        <div class="foot-col">
+          <h4>Producto</h4>
+          <ul class="foot-links">
+            <li><a href="#">Funcionalidades</a></li>
+            <li><a href="#">Plantillas</a></li>
+            <li><a href="#">Integraciones</a></li>
+            <li><a href="#">API</a></li>
+            <li><a href="#">Precios</a></li>
+          </ul>
+        </div>
+
+        <div class="foot-col">
+          <h4>Empresa</h4>
+          <ul class="foot-links">
+            <li><a href="#">Acerca de</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Carreras</a></li>
+            <li><a href="#">Contacto</a></li>
+          </ul>
+        </div>
+
+        <div class="foot-col">
+          <h4>Soporte</h4>
+          <ul class="foot-links">
+            <li><a href="#">Centro de ayuda</a></li>
+            <li><a href="#">Documentación</a></li>
+            <li><a href="#">Estado del sistema</a></li>
+            <li><a href="#">Comunidad</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot-bottom">
+        <p>© 2024 Survey. Todos los derechos reservados.</p>
+        <ul class="foot-btm-links">
+          <li><a href="#">Privacidad</a></li>
+          <li><a href="#">Términos</a></li>
+          <li><a href="#">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/splitting@1.0.6/dist/splitting.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <script>
+    (function () {
+
+      const rawData = [120,145,110,180,200,175,220,195,240,215,260,230,280,300,270,310,290,330,315,350,340,370,385,360,400,420,390,448];
+
+      const today = new Date();
+      const data = rawData.map((v, i) => {
+        const d = new Date(today);
+        d.setDate(today.getDate() - (rawData.length - 1 - i));
+        return { date: d, value: v };
+      });
+
+      function buildSparkline(containerId, gradId, clipId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const rect = container.getBoundingClientRect();
+        const W = rect.width > 0 ? rect.width : 300;
+        const H = rect.height > 0 ? rect.height : 90;
+        const margin = { top: 8, right: 8, bottom: 28, left: 36 };
+        const iW = W - margin.left - margin.right;
+        const iH = H - margin.top - margin.bottom;
+
+        const x = d3.scaleTime()
+          .domain(d3.extent(data, d => d.date))
+          .range([0, iW]);
+
+        const y = d3.scaleLinear()
+          .domain([d3.min(data, d => d.value) * 0.82, d3.max(data, d => d.value) * 1.05])
+          .range([iH, 0]);
+
+        const area = d3.area()
+          .x(d => x(d.date)).y0(iH).y1(d => y(d.value))
+          .curve(d3.curveCatmullRom.alpha(0.5));
+
+        const line = d3.line()
+          .x(d => x(d.date)).y(d => y(d.value))
+          .curve(d3.curveCatmullRom.alpha(0.5));
+
+        const svg = d3.select(container).append('svg')
+          .attr('width', '100%').attr('height', '100%').attr('viewBox', `0 0 ${W} ${H}`)
+          .style('display', 'block');
+        const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+        const defs = svg.append('defs');
+        const grad = defs.append('linearGradient')
+          .attr('id', gradId).attr('x1','0').attr('y1','0').attr('x2','0').attr('y2','1');
+        grad.append('stop').attr('offset','0%').attr('stop-color','rgba(0,253,201,.22)');
+        grad.append('stop').attr('offset','100%').attr('stop-color','rgba(0,253,201,0)');
+
+        defs.append('clipPath').attr('id', clipId)
+          .append('rect').attr('x',0).attr('y',-8).attr('height', iH+16).attr('width',0)
+          .transition().duration(1400).ease(d3.easeCubicInOut).attr('width', iW);
+
+        // Grid lines horizontales
+        const yTicks = y.ticks(4);
+        g.selectAll('.grid-line')
+          .data(yTicks)
+          .enter().append('line')
+          .attr('class', 'grid-line')
+          .attr('x1', 0).attr('x2', iW)
+          .attr('y1', d => y(d)).attr('y2', d => y(d))
+          .attr('stroke', 'rgba(255,255,255,.06)')
+          .attr('stroke-dasharray', '3,4');
+
+        // Eje Y — valores
+        const yAxis = g.append('g');
+        yTicks.forEach(tick => {
+          yAxis.append('text')
+            .attr('x', -8)
+            .attr('y', y(tick) + 3.5)
+            .attr('text-anchor', 'end')
+            .attr('fill', 'rgba(255,255,255,.3)')
+            .attr('font-family', 'Lexend, sans-serif')
+            .attr('font-size', '8')
+            .attr('font-weight', '600')
+            .text(tick >= 1000 ? (tick/1000).toFixed(0)+'k' : tick);
+        });
+
+        // Eje X — fechas (cada 7 días aprox)
+        const xTicks = x.ticks(4);
+        const xAxis = g.append('g').attr('transform', `translate(0,${iH})`);
+        xTicks.forEach(tick => {
+          const fmt = d3.timeFormat('%d/%m');
+          xAxis.append('text')
+            .attr('x', x(tick))
+            .attr('y', 14)
+            .attr('text-anchor', 'middle')
+            .attr('fill', 'rgba(255,255,255,.28)')
+            .attr('font-family', 'Lexend, sans-serif')
+            .attr('font-size', '8')
+            .attr('font-weight', '600')
+            .text(fmt(tick));
+        });
+
+        // Línea base del eje X
+        g.append('line')
+          .attr('x1', 0).attr('x2', iW)
+          .attr('y1', iH).attr('y2', iH)
+          .attr('stroke', 'rgba(255,255,255,.1)');
+
+        // Área y línea
+        g.append('path').datum(data)
+          .attr('fill',`url(#${gradId})`).attr('d', area).attr('clip-path',`url(#${clipId})`);
+
+        g.append('path').datum(data)
+          .attr('fill','none').attr('stroke','#00FDC9').attr('stroke-width',2)
+          .attr('stroke-linecap','round').attr('d', line).attr('clip-path',`url(#${clipId})`);
+
+        // Punto final
+        g.append('circle')
+          .attr('cx', x(data[data.length-1].date)).attr('cy', y(data[data.length-1].value))
+          .attr('r',4).attr('fill','var(--primary)').attr('stroke','#fff').attr('stroke-width',2)
+          .attr('clip-path',`url(#${clipId})`);
+      }
+
+      function animCount(elId, from, to, dur, decimals, suffix) {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        const start = performance.now();
+        function tick(now) {
+          const t = Math.min((now - start) / dur, 1);
+          const ease = 1 - Math.pow(1 - t, 3);
+          const val = from + (to - from) * ease;
+          el.innerHTML = (decimals ? val.toFixed(decimals) : Math.round(val)) + `<em>${suffix}</em>`;
+          if (t < 1) requestAnimationFrame(tick);
+          else el.innerHTML = (decimals ? to.toFixed(decimals) : to) + `<em>${suffix}</em>`;
+        }
+        requestAnimationFrame(tick);
+      }
+
+      function animNPS(elId, target, dur) {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        const start = performance.now();
+        function tick(now) {
+          const t = Math.min((now - start) / dur, 1);
+          const ease = 1 - Math.pow(1 - t, 3);
+          el.textContent = Math.round(target * ease);
+          if (t < 1) requestAnimationFrame(tick);
+          else el.textContent = target;
+        }
+        requestAnimationFrame(tick);
+      }
+
+      function startAnimations() {
+        animCount('hf-resp-val', 0, 12.4, 1400, 1, 'k');
+        animCount('hf-rate-val', 0, 94, 1400, 0, '%');
+        animNPS('hf-nps-val', 75, 1400);
+
+        setTimeout(() => {
+          const ring = document.getElementById('hf-nps-ring');
+          if (ring) ring.classList.add('animated');
+
+          const rateBar = document.getElementById('hf-rate-bar');
+          if (rateBar) rateBar.style.width = '94%';
+
+          const liveBar = document.getElementById('hf-live-bar');
+          if (liveBar) liveBar.classList.add('animated');
+        }, 300);
+
+        buildSparkline('hf-spark-container', 'hf-sg1', 'hf-sc1');
+        buildSparkline('hf-spark-container-2', 'hf-sg2', 'hf-sc2');
+      }
+
+      function initSlider() {
+        const slides = document.querySelectorAll('.hero-slide');
+        const dotsEl = document.getElementById('hero-slider-dots');
+        if (!slides.length) { startAnimations(); return; }
+
+        let current = 0;
+        const total = slides.length;
+        let autoTimer = null;
+        let transitioning = false;
+
+        // Set initial active
+        slides[0].classList.add('is-active');
+
+        // Dots
+        slides.forEach((_, i) => {
+          const dot = document.createElement('button');
+          dot.className = 'hero-slider-dot' + (i === 0 ? ' is-selected' : '');
+          dot.setAttribute('aria-label', 'Slide ' + (i + 1));
+          dot.addEventListener('click', () => { goTo(i); resetTimer(); });
+          if (dotsEl) dotsEl.appendChild(dot);
+        });
+
+        function goTo(idx) {
+          if (transitioning) return;
+          const next = (idx + total) % total;
+          if (next === current) return;
+          transitioning = true;
+
+          const outSlide = slides[current];
+          const inSlide = slides[next];
+
+          // Mark exiting slide
+          outSlide.classList.remove('is-active');
+          outSlide.classList.add('is-exit');
+
+          // After exit transition, clean up
+          setTimeout(() => {
+            outSlide.classList.remove('is-exit');
+          }, 750);
+
+          // Enter new slide from depth
+          inSlide.classList.add('is-active');
+
+          current = next;
+
+          if (dotsEl) {
+            dotsEl.querySelectorAll('.hero-slider-dot').forEach((d, i) =>
+              d.classList.toggle('is-selected', i === current));
+          }
+
+          // Allow next transition after enter animation
+          setTimeout(() => { transitioning = false; }, 680);
+        }
+
+        function resetTimer() {
+          clearInterval(autoTimer);
+          autoTimer = setInterval(() => goTo(current + 1), 3600);
+        }
+
+        autoTimer = setInterval(() => goTo(current + 1), 5000);
+
+        const sliderEl = document.getElementById('hero-slider');
+        if (sliderEl) {
+          sliderEl.addEventListener('mouseenter', () => clearInterval(autoTimer));
+          sliderEl.addEventListener('mouseleave', resetTimer);
+        }
+
+        let touchStartX = 0;
+        if (sliderEl) {
+          sliderEl.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+          sliderEl.addEventListener('touchend', e => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(dx) > 40) { goTo(dx < 0 ? current + 1 : current - 1); resetTimer(); }
+          });
+        }
+
+        startAnimations();
+      }
+
+      function initHeroGSAP() {
+        try { Splitting(); } catch(e) {}
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+        tl.fromTo('.hero-right',
+          { opacity: 0, x: -40 },
+          { opacity: 1, x: 0, duration: 0.65 }
+        );
+
+        tl.fromTo('.hero-left',
+          { opacity: 0, x: 40 },
+          { opacity: 1, x: 0, duration: 0.65 },
+          '<'
+        );
+
+        tl.fromTo('.hero-kicker',
+          { opacity: 0, y: 18 },
+          { opacity: 1, y: 0, duration: 0.45 },
+          '-=0.4'
+        );
+
+        // Animate title words (no per-char stagger — too slow for slider timing)
+        tl.fromTo('.hero-title',
+          { opacity: 0, y: 24 },
+          { opacity: 1, y: 0, duration: 0.5 },
+          '-=0.2'
+        );
+
+        tl.fromTo('.hero-sub',
+          { opacity: 0, y: 14 },
+          { opacity: 1, y: 0, duration: 0.45 },
+          '-=0.15'
+        );
+
+        tl.fromTo('.hero-actions .btn',
+          { opacity: 0, y: 10 },
+          { opacity: 1, y: 0, duration: 0.38, stagger: 0.08 },
+          '-=0.12'
+        );
+
+        gsap.from('.stat-card', {
+          scrollTrigger: { trigger: '.hero-stats', start: 'top 85%' },
+          y: 40, opacity: 0, duration: 0.65, stagger: 0.1, ease: 'power3.out'
+        });
+
+        // Slider vanilla — después de que GSAP termine
+        tl.call(() => initSlider());
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHeroGSAP);
+      } else {
+        initHeroGSAP();
+      }
+
+    })();
+  </script>
+</body>
+</html>
